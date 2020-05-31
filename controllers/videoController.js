@@ -4,7 +4,7 @@ import { renderFile } from "pug";
 
 export const home = async (req, res) => {
   try {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort({ _id: -1 }); // -1 뜻은 위 아래 순서를 바꾸겠다는 약속 -- 새로운 비디오가 먼저 나오게 하기 위함
     res.render("home", { pageTitle: "Home", videos });
   } catch (error) {
     console.log(error);
@@ -12,12 +12,16 @@ export const home = async (req, res) => {
   }
 };
 
+// Search
+
 export const search = (req, res) => {
   const {
     query: { term: searchingBy },
   } = req;
-  res.render("search", { pageTitle: "Search", searchingBy, videos });
+  res.render("search", { pageTitle: "Search", searchingBy });
 };
+
+// Upload
 
 export const getUpload = (req, res) =>
   res.render("upload", { pageTitle: "Upload" });
@@ -81,6 +85,8 @@ export const deleteVideo = async (req, res) => {
   } = req;
   try {
     await Video.findOneAndRemove({ _id: id });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
   res.redirect(routes.home);
 };
