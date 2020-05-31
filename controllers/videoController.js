@@ -1,6 +1,7 @@
 import routes from "../routes";
 import Video from "../models/Video";
-import { renderFile } from "pug";
+
+// Home
 
 export const home = async (req, res) => {
   try {
@@ -14,11 +15,19 @@ export const home = async (req, res) => {
 
 // Search
 
-export const search = (req, res) => {
+export const search = async (req, res) => {
   const {
     query: { term: searchingBy },
   } = req;
-  res.render("search", { pageTitle: "Search", searchingBy });
+  let videos = []; // let 사용이유: 검색어 포함 결과 없으면 빈배열로 render, 있으면 video가 reassign
+  try {
+    videos = await Video.find({
+      title: { $regex: searchingBy, $options: "i" },
+    }); // "i" means insensitive --대소문자 구분 안함
+  } catch (error) {
+    console.log(error);
+  }
+  res.render("search", { pageTitle: "Search", searchingBy, videos });
 };
 
 // Upload
@@ -39,6 +48,8 @@ export const postUpload = async (req, res) => {
   res.redirect(routes.videoDetail(newVideo.id));
 };
 
+// Video Detail
+
 export const videoDetail = async (req, res) => {
   const {
     params: { id },
@@ -51,6 +62,8 @@ export const videoDetail = async (req, res) => {
     res.redirect(routes.home);
   }
 };
+
+// Edit Video
 
 export const getEditVideo = async (req, res) => {
   //'get'은 뭔가를 채워넣는 작업 -- 템플릿을 렌더링
@@ -78,6 +91,8 @@ export const postEditVideo = async (req, res) => {
     res.redirect(routes.home);
   }
 };
+
+// Delete Video
 
 export const deleteVideo = async (req, res) => {
   const {
