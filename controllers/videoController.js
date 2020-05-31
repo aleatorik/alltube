@@ -42,7 +42,7 @@ export const videoDetail = async (req, res) => {
   try {
     const video = await Video.findById(id);
     console.log(video);
-    res.render("videoDetail", { pageTitle: "Video Detail", video });
+    res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     res.redirect(routes.home);
   }
@@ -75,5 +75,12 @@ export const postEditVideo = async (req, res) => {
   }
 };
 
-export const deleteVideo = (req, res) =>
-  res.render("deleteVideo", { pageTitle: "Delete Video" });
+export const deleteVideo = async (req, res) => {
+  const {
+    params: { id }, // 파라미터 받기 -- URL로 부터 id를 받아와야 함
+  } = req;
+  try {
+    await Video.findOneAndRemove({ _id: id });
+  } catch (error) {}
+  res.redirect(routes.home);
+};
