@@ -11,27 +11,34 @@ const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js"); //__dirna
 const OUTPUT_DIR = path.join(__dirname, "static");
 
 const config = {
-  entry: ENTRY_FILE,
+  entry: ["@babel/polyfill", ENTRY_FILE],
   mode: MODE,
   module: {
     rules: [
       {
+        test: /\.(js)$/,
+        use: [
+          {
+            loader: "babel-loader",
+          },
+        ],
+      },
+      {
         test: /\.(scss)$/,
         use: ExtractCSS.extract([
-          // Extract CSS from below
           {
-            loader: "css-loader", //load CSS
+            loader: "css-loader",
           },
           {
             loader: "postcss-loader",
             options: {
-              plugin() {
+              plugins() {
                 return [autoprefixer({ browsers: "cover 99.5%" })];
               },
             },
           },
           {
-            loader: "sass-loader", // Sass -> CSS
+            loader: "sass-loader",
           },
         ]),
       },
