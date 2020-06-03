@@ -502,6 +502,7 @@ input[type="submit"] {
   opacity: 1;
 }
 .videoPlayer video {
+  width: 100%;
   max-width: 100%;
 }
 .videoPlayer .videoPlayer__controls {
