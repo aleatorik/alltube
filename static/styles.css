@@ -537,7 +537,7 @@ input[type="submit"] {
 .videoPlayer
   .videoPlayer__controls
   .videoPlayer__column:first-child
-  span:first-child {
+  > span:first-child {
   margin-right: 10px;
 }
 .videoPlayer .videoPlayer__controls .videoPlayer__column:last-child {
