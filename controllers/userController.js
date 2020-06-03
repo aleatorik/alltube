@@ -3,9 +3,10 @@ import routes from "../routes";
 import User from "../models/User";
 
 export const getJoin = (req, res) => {
-  // 누군가를 사용자로 가입시키는 기능
+  // 사용자를 가입시키는 기능
   res.render("join", { pageTitle: "Join" });
 };
+
 export const postJoin = async (req, res, next) => {
   const {
     body: { name, email, password, password2 },
@@ -25,21 +26,32 @@ export const postJoin = async (req, res, next) => {
       console.log(error);
       res.redirect(routes.home);
     }
-    //        2)Log user in
-    res.redirect(routes.home);
   }
 };
 
 export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
+  res.render("login", { pageTitle: "Log In" });
+
 export const postLogin = passport.authenticate("local", {
   failureRedirect: routes.login,
   successRedirect: routes.home,
 });
 
-export const logout = (req, res) =>
-  res.render("logout", { pageTitle: "Logout" });
-export const users = (req, res) => res.render("users", { pageTitle: "Users" });
+export const githubLogin = passport.authenticate("github");
+
+export const githubLoginCallback = (accessToken, refreshToken, profile, cb) => {
+  console.log(accessToken, refreshToken, profile, cb);
+};
+
+export const postGithubLogIn = (req, res) => {
+  res.send(routes.home);
+};
+
+export const logout = (req, res) => {
+  req.logout();
+  res.redirect(routes.home);
+};
+
 export const userDetail = (req, res) =>
   res.render("userDetail", { pageTitle: "User Detail" });
 export const editProfile = (req, res) =>
